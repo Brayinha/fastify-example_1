@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    container_name: fastify_api
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: fastify
+      DB_PASSWORD: secret
+      DB_NAME: fastifydb
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  postgres:
+    image: postgres:15
+    container_name: fastify_db
+    restart: always
+    environment:
+      POSTGRES_USER: fastify
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: fastifydb
+    ports:
+      - "5400:5400"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
